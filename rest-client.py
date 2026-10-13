@@ -41,11 +41,37 @@ def doAdd(addr, debug=False):
 
 
 def doDotProduct(addr, debug=False):
-    pass
+
+    headers = {'content-type': 'application/json'}
+
+    # Generate two vectors of length 100 with elements in [0, 1)
+    a = [random.random() for _ in range(100)]
+    b = [random.random() for _ in range(100)]
+    payload = jsonpickle.encode({'a': a, 'b': b})
+
+    dotproduct_url = addr + '/api/dotproduct'
+    response = requests.post(dotproduct_url, data=payload, headers=headers)
+
+    if debug:
+        print("Response is", response)
+        print(json.loads(response.text))
 
 
 def doJsonImage(addr, debug=False):
-    pass
+
+    headers = {'content-type': 'application/json'}
+
+    img = open('Flatirons_Winter_Sunrise_edit_2.jpg', 'rb').read()
+    img_b64 = base64.b64encode(img).decode('utf-8')
+    payload = jsonpickle.encode({'image': img_b64})
+
+    # send http request with base64 image and receive response
+    image_url = addr + '/api/jsonimage'
+    response = requests.post(image_url, data=payload, headers=headers)
+
+    if debug:
+        print("Response is", response)
+        print(json.loads(response.text))
 
 
 # ---------------------------------------------------------

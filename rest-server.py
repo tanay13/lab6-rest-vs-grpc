@@ -10,6 +10,7 @@ import argparse
 app = Flask(__name__)
 
 import logging
+import base64
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.DEBUG)
 
@@ -51,12 +52,41 @@ def rawimage():
 
 @app.route('/api/dotproduct', methods=['POST'])
 def dotproduct():
-    pass
+    data = request.get_json(force=True)
+    a = data.get('a', [])
+    b = data.get('b', [])
+    result = sum(x * y for x, y in zip(a, b))
+    response = {'dotproduct': result}
+    response_pickled = jsonpickle.encode(response)
+    return Response(
+        response=response_pickled,
+        status=200,
+        mimetype="application/json"
+    )
 
 
 @app.route('/api/jsonimage', methods=['POST'])
 def jsonimage():
-    pass
+    data = request.get_json(force=True)
+    try:
+        img_b64 = data.get('image', '')
+        img_bytes = base64.b64decode(img_b64)
+        ioBuffer = io.BytesIO(img_bytes)
+        img = Image.open(ioBuffer)
+
+        response = {
+            'width': img.size[0],
+            'height': img.size[1]
+        }
+    except Exception:
+        response = {'width': 0, 'height': 0}
+
+    response_pickled = jsonpickle.encode(response)
+    return Response(
+        response=response_pickled,
+        status=200,
+        mimetype="application/json"
+    )
 
 
 if __name__ == '__main__':
@@ -68,7 +98,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-p', '--port',
         type=int,
-        default=5000,
+        default=3000,
         help='Port on which to run the server (default: 5000)'
     )
 
