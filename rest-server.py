@@ -99,7 +99,7 @@ if __name__ == '__main__':
         '-p', '--port',
         type=int,
         default=3000,
-        help='Port on which to run the server (default: 5000)'
+        help='Port on which to run the server (default: 3000)'
     )
 
     args = parser.parse_args()

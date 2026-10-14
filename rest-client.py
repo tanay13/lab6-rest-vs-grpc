@@ -102,8 +102,8 @@ parser.add_argument(
 parser.add_argument(
     '-p', '--port',
     type=int,
-    default=5000,
-    help='Server port (default: 5000)'
+    default=3000,
+    help='Server port (default: 3000)'
 )
 
 parser.add_argument(
